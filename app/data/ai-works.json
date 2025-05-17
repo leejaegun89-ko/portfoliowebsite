@@ -1,0 +1,50 @@
+{
+  "projects": [
+    {
+      "id": "1747516525263",
+      "title": "New AI Project",
+      "description": "Developed a sophisticated AI system that helps solve complex problems. Built with advanced machine learning models and innovative algorithms to provide intelligent solutions.",
+      "technologies": [
+        "AI",
+        "Machine Learning",
+        "Python"
+      ],
+      "date": "May 2025",
+      "mediaUrl": "/uploads/1747516525263-1747516595786-Screen Recording 2025-05-17 at 4.19.18 PM.mov",
+      "mediaType": "video"
+    },
+    {
+      "id": "1747516212117",
+      "title": "New AI Project",
+      "description": "Developed a sophisticated AI system that helps solve complex problems. Built with advanced machine learning models and innovative algorithms to provide intelligent solutions.",
+      "technologies": [
+        "AI",
+        "Machine Learning",
+        "Python"
+      ],
+      "date": "September 3000"
+    },
+    {
+      "id": "1",
+      "title": "AI-Powered Code Assistant",
+      "description": "Developed a sophisticated AI code assistant that helps developers write better code. Built with advanced language models and code analysis tools, it provides real-time suggestions, bug detection, and code optimization recommendations.",
+      "technologies": [
+        "OpenAI",
+        "Claude"
+      ],
+      "date": "March 2024",
+      "newTech": ""
+    },
+    {
+      "id": "2",
+      "title": "Computer Vision for Healthcare Master",
+      "description": "Created an AI-driven medical",
+      "technologies": [
+        "PyTorch",
+        "Computer Vision",
+        "CUDA"
+      ],
+      "date": "February 2024"
+    }
+  ]
+}

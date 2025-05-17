@@ -1,103 +1,171 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [typingText, setTypingText] = useState('');
+  const [activeText, setActiveText] = useState(-1);
+  const lastMoveTime = useRef<number>(0);
+  const positions = useRef<{ x: number, y: number }[]>([]);
+  
+  const typingPart = "I'm Jae Lee — a Product Manager";
+  const staticPart = "exploring the exciting world of AI";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const currentTime = Date.now();
+      const newPosition = { x: e.clientX, y: e.clientY };
+      setCursorPosition(newPosition);
+      
+      if (currentTime - lastMoveTime.current > 400) {
+        setActiveText(prev => (prev + 1) % 3);
+        lastMoveTime.current = currentTime;
+      }
+
+      positions.current = positions.current.map((pos, idx) => {
+        const targetOffset = floatingTexts[idx].offset;
+        const targetX = newPosition.x + targetOffset.x;
+        const targetY = newPosition.y + targetOffset.y;
+        
+        return {
+          x: pos.x + (targetX - pos.x) * 0.05,
+          y: pos.y + (targetY - pos.y) * 0.05
+        };
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    positions.current = floatingTexts.map(() => ({ x: window.innerWidth / 2, y: window.innerHeight / 2 }));
+    
+    const updatePositions = () => {
+      if (positions.current.length > 0) {
+        setPositionsState([...positions.current]);
+        requestAnimationFrame(updatePositions);
+      }
+    };
+    
+    requestAnimationFrame(updatePositions);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    let currentIndex = 0;
+    let isDeleting = false;
+
+    const typeText = () => {
+      if (!isMounted) return;
+
+      if (isDeleting) {
+        if (currentIndex > 0) {
+          currentIndex--;
+          setTypingText(typingPart.slice(0, currentIndex));
+          setTimeout(typeText, 30);
+        } else {
+          isDeleting = false;
+          setTimeout(typeText, 500);
+        }
+      } else {
+        if (currentIndex < typingPart.length) {
+          currentIndex++;
+          setTypingText(typingPart.slice(0, currentIndex));
+          setTimeout(typeText, Math.random() * 50 + 50);
+        } else {
+          isDeleting = true;
+          setTimeout(typeText, 1000);
+        }
+      }
+    };
+
+    typeText();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeText !== -1) {
+      const timer = setTimeout(() => {
+        setActiveText(-1);
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [activeText]);
+
+  const [positionsState, setPositionsState] = useState<{ x: number, y: number }[]>([]);
+
+  const floatingTexts = [
+    { text: 'JUST', offset: { x: -250, y: -200 } },
+    { text: 'DO', offset: { x: 250, y: 0 } },
+    { text: 'IT', offset: { x: -250, y: 200 } },
+  ];
+
+  return (
+    <>
+      <style jsx global>{`
+        body {
+          overflow: hidden;
+        }
+      `}</style>
+
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm py-6">
+        <div className="container mx-auto px-8 flex justify-between items-center">
+          <Link href="/" className="home-button text-white hover:text-green-400 transition-colors">
+            Jae Lee
+          </Link>
+          
+          <nav className="nav-container flex gap-6 items-center">
+            <Link href="/about" className="nav-button text-white hover:text-green-400 transition-colors">
+              About
+            </Link>
+            <Link href="/ai-works" className="nav-button text-white hover:text-green-400 transition-colors">
+              AI Works
+            </Link>
+          </nav>
+        </div>
+      </div>
+
+      <main className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div 
+          className="custom-cursor"
+          style={{
+            left: `${cursorPosition.x}px`,
+            top: `${cursorPosition.y}px`,
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+        
+        {floatingTexts.map((item, index) => (
+          <div
+            key={item.text}
+            className={`floating-text ${index === activeText ? 'visible' : 'fade-out'}`}
+            style={{
+              left: positionsState[index]?.x || cursorPosition.x,
+              top: positionsState[index]?.y || cursorPosition.y,
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {item.text}
+          </div>
+        ))}
+
+        <div className="text-center z-10 max-w-4xl px-4">
+          <h1 className="text-3xl font-medium whitespace-nowrap">
+            Hi, <span className="typing-text">{typingText}</span> <span className="text-white">{staticPart}</span>
+          </h1>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+      <div style={{ position: 'fixed', right: '16px', bottom: '16px', zIndex: 50 }}>
+        <div className="nav-button" style={{ fontFamily: 'var(--font-space-mono)', fontSize: '14px' }}>
+          Made with Vibe Coding ✨
+        </div>
+      </div>
+    </>
   );
 }
