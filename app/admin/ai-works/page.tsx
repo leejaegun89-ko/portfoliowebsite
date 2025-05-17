@@ -464,11 +464,10 @@ export default function AdminAIWorks() {
       <div 
         className="container mx-auto px-8" 
         style={{ marginTop: '145px' }}>
-        <h1 className="text-8xl font-bold text-center mb-32 text-white">
-          AI Works
-        </h1>
-
-        <div className="text-center mb-20">
+        <div className="flex justify-between items-center mb-32">
+          <h1 className="text-8xl font-bold text-white">
+            AI Works
+          </h1>
           <button
             onClick={async () => {
               const newProject = {
@@ -502,9 +501,9 @@ export default function AdminAIWorks() {
                 alert('Failed to create project. Please try again.');
               }
             }}
-            className="add-project"
+            className="add-project text-xl py-4 px-8"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
             Add New Project
