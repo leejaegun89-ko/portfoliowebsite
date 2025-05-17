@@ -20,6 +20,8 @@ export default function AdminAIWorks() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -41,6 +43,60 @@ export default function AdminAIWorks() {
     } catch (error) {
       console.error('Error fetching projects:', error);
       setIsLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+      
+      // Update projects with the new media URL
+      const updatedProjects = [...projects];
+      const projectIndex = selectedProjectIndex;
+      
+      if (projectIndex !== null && projectIndex >= 0) {
+        updatedProjects[projectIndex] = {
+          ...updatedProjects[projectIndex],
+          mediaUrl: data.url,
+        };
+        setProjects(updatedProjects);
+        saveProjects(updatedProjects);
+      }
+      
+      setUploadStatus('success');
+    } catch (error) {
+      console.error('Error:', error);
+      setUploadStatus('error');
+    }
+  };
+
+  const saveProjects = async (updatedProjects: Project[]) => {
+    try {
+      const response = await fetch('/api/ai-works', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedProjects),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save projects');
+      }
+    } catch (error) {
+      console.error('Error saving projects:', error);
     }
   };
 
@@ -459,7 +515,7 @@ export default function AdminAIWorks() {
           {isLoading ? (
             <div className="text-center text-white">Loading...</div>
           ) : (
-            projects.map((project) => (
+            projects.map((project, index) => (
               <div 
                 key={project.id}
                 className="project-card relative"
@@ -525,30 +581,7 @@ export default function AdminAIWorks() {
                               const file = e.target.files?.[0];
                               if (!file) return;
 
-                              const formData = new FormData();
-                              formData.append('file', file);
-                              formData.append('projectId', editingProject.id);
-
-                              try {
-                                const response = await fetch('/api/upload', {
-                                  method: 'POST',
-                                  body: formData,
-                                });
-
-                                if (response.ok) {
-                                  const data = await response.json();
-                                  setEditingProject({
-                                    ...editingProject,
-                                    mediaUrl: data.url,
-                                    mediaType: file.type.startsWith('video/') ? 'video' : 'image'
-                                  });
-                                } else {
-                                  throw new Error('Failed to upload file');
-                                }
-                              } catch (error) {
-                                console.error('Error uploading file:', error);
-                                alert('Failed to upload file. Please try again.');
-                              }
+                              await handleFileUpload(file);
                             }}
                           />
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="text-green-400">

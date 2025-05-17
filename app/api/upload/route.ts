@@ -1,39 +1,37 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import cloudinary from '@/lib/cloudinary';
 
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const projectId = formData.get('projectId') as string;
-
+    
     if (!file) {
       return NextResponse.json(
-        { error: 'No file received.' },
+        { error: 'No file provided' },
         { status: 400 }
       );
     }
 
+    // Convert file to base64
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const fileBase64 = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    // Create unique filename
-    const uniqueFilename = `${projectId}-${Date.now()}-${file.name}`;
-    
-    // Save file to public directory
-    const path = join(process.cwd(), 'public', 'uploads', uniqueFilename);
-    await writeFile(path, buffer);
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(fileBase64, {
+      resource_type: 'auto', // Automatically detect if it's an image or video
+    });
 
-    // Return the URL for the uploaded file
-    return NextResponse.json({ 
-      url: `/uploads/${uniqueFilename}` 
+    return NextResponse.json({
+      url: result.secure_url,
+      public_id: result.public_id
     });
     
   } catch (error) {
-    console.error('Error handling file upload:', error);
+    console.error('Upload error:', error);
     return NextResponse.json(
-      { error: 'Error uploading file.' },
+      { error: 'Error uploading file' },
       { status: 500 }
     );
   }
