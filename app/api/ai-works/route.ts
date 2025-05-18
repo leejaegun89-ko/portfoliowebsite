@@ -28,7 +28,7 @@ const projects = {
       ],
       "date": "June 2023",
       "titleUrl": "https://workout-plan-by-jae-lee.bubbleapps.io/version-test?debug_mode=true",
-      "mediaUrl": "AI_Fitness_Planner-1747525212197-823888478",
+      "mediaUrl": "v1747533516/AI_Fitness_Planner-1747524870356-828760369_y3owgl.mov",
       "mediaType": "video"
     },
     {
