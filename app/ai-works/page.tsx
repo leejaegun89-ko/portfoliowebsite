@@ -231,15 +231,10 @@ export default function AIWorks() {
                     {project.mediaUrl && (
                       <div className="media-preview mb-8">
                         {project.mediaType === 'video' ? (
-                          <CldVideoPlayer
-                            width="1920"
-                            height="1080"
-                            src={`portfolio-media/${project.mediaUrl}`}
-                            colors={{
-                              base: '#4ade80',
-                              text: '#fff',
-                              accent: '#4ade80'
-                            }}
+                          <video 
+                            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/portfolio-media/${project.mediaUrl}`}
+                            controls
+                            className="w-full h-[250px] object-contain"
                           />
                         ) : (
                           <img src={project.mediaUrl} alt={project.title} />
