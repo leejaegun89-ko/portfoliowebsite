@@ -232,7 +232,7 @@ export default function AIWorks() {
                       <div className="media-preview mb-8">
                         {project.mediaType === 'video' ? (
                           <video 
-                            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/portfolio-media/${project.mediaUrl}`}
+                            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${project.mediaUrl}`}
                             controls
                             className="w-full h-[250px] object-contain"
                           />

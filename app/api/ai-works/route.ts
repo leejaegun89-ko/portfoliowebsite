@@ -70,7 +70,7 @@ const projects = {
       ],
       "date": "July 2023",
       "titleUrl": "https://job-interview-buddy.bubbleapps.io/version-test?debug_mode=true",
-      "mediaUrl": "Screen_Recording_2025-05-17_at_8.06.36_PM-1747526872890-998726735",
+      "mediaUrl": "v1747533473/AI_Job_Interview_Practice_hqwthr.mov",
       "mediaType": "video"
     },
     {
@@ -82,7 +82,7 @@ const projects = {
         "Bubble (No Code SaaS)"
       ],
       "date": "August 2023",
-      "mediaUrl": "Screen_Recording_2025-05-17_at_8.13.46_PM-1747527345900-621055327",
+      "mediaUrl": "v1747533518/AI_Cartoon_Generator_jdwbqf.mov",
       "mediaType": "video",
       "titleUrl": ""
     }
