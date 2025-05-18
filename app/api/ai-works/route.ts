@@ -13,6 +13,8 @@ const projects = {
         "Audio Visualization API"
       ],
       "date": "August 2023",
+      "mediaUrl": null,
+      "mediaType": null,
       "titleUrl": "https://text-to-speech-42991.bubbleapps.io/version-test?debug_mode=true"
     },
     {
@@ -28,6 +30,35 @@ const projects = {
       "titleUrl": "https://workout-plan-by-jae-lee.bubbleapps.io/version-test?debug_mode=true",
       "mediaUrl": "AI_Fitness_Planner-1747525212197-823888478",
       "mediaType": "video"
+    },
+    {
+      "id": "1",
+      "title": "AI Image Generator",
+      "description": "With ZERO development experience, I built an AI Chatbot & AI Image Generator using Bubble with OpenAI integration in just a day.",
+      "technologies": [
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Image Generation"
+      ],
+      "date": "May 2023",
+      "newTech": "",
+      "titleUrl": "http://ai-image-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
+      "mediaUrl": null,
+      "mediaType": null
+    },
+    {
+      "id": "2",
+      "title": "AI Chat Bot",
+      "description": "With ZERO development experience, I built an AI Chatbot & AI Image Generator using Bubble with OpenAI integration in just a day.",
+      "technologies": [
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Text Generation and Prompting"
+      ],
+      "date": "May 2023",
+      "titleUrl": "https://chatapp-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
+      "mediaUrl": null,
+      "mediaType": null
     },
     {
       "id": "1747526638707",
