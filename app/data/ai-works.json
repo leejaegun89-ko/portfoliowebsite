@@ -2,49 +2,87 @@
   "projects": [
     {
       "id": "1747516525263",
-      "title": "New AI Project",
-      "description": "Developed a sophisticated AI system that helps solve complex problems. Built with advanced machine learning models and innovative algorithms to provide intelligent solutions.",
+      "title": "Audio to Text, and Translate",
+      "description": "How to use it:\n\n1) Click Record / Stop to start and stop your recording. Speak while recording\n2) Click Record / Stop again to end the recording\n3) Click Play / Stop to listen to your recording\n4) Click Play / Stop again to stop playback\n5) Click Save to save your recording\n6) Click Transcription to generate a transcript of your recording\n7) Enter the target language you want to translate to, then click Translate.",
       "technologies": [
-        "AI",
-        "Machine Learning",
-        "Python"
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Text Generation and Prompting",
+        "Audio Visualization API"
       ],
-      "date": "May 2025",
-      "mediaUrl": "/uploads/1747516525263-1747516595786-Screen Recording 2025-05-17 at 4.19.18 PM.mov",
-      "mediaType": "video"
+      "date": "August 2023",
+      "mediaUrl": "/uploads/Screenshot 2025-05-17 at 8.03.22 PM-1747526612760-368855802.png",
+      "mediaType": "image",
+      "titleUrl": "https://text-to-speech-42991.bubbleapps.io/version-test?debug_mode=true"
     },
     {
       "id": "1747516212117",
-      "title": "New AI Project",
-      "description": "Developed a sophisticated AI system that helps solve complex problems. Built with advanced machine learning models and innovative algorithms to provide intelligent solutions.",
+      "title": "AI Fitness Workout Planner",
+      "description": "Built an AI Workout Plan Builder!🏋️‍♀️\n\n1. Select your workout intensity to match your vibe.\n2. Type which muscle(s) you are crushing on today.",
       "technologies": [
-        "AI",
-        "Machine Learning",
-        "Python"
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Text Generation and Prompting"
       ],
-      "date": "September 3000"
+      "date": "June 2023",
+      "titleUrl": "https://workout-plan-by-jae-lee.bubbleapps.io/version-test?debug_mode=true",
+      "mediaUrl": "/uploads/AI Fitness Planner-1747525212197-823888478.mov",
+      "mediaType": "video"
     },
     {
       "id": "1",
-      "title": "AI-Powered Code Assistant",
-      "description": "Developed a sophisticated AI code assistant that helps developers write better code. Built with advanced language models and code analysis tools, it provides real-time suggestions, bug detection, and code optimization recommendations.",
+      "title": "AI Image Generator",
+      "description": "With ZERO development experience, I built an AI Chatbot & AI Image Generator using Bubble with OpenAI integration in just a day.",
       "technologies": [
-        "OpenAI",
-        "Claude"
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Image Generation"
       ],
-      "date": "March 2024",
-      "newTech": ""
+      "date": "May 2023",
+      "newTech": "",
+      "titleUrl": "http://ai-image-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
+      "mediaUrl": "/uploads/Screenshot 2025-05-17 at 7.52.40 PM-1747525972097-639978774.png",
+      "mediaType": "image"
     },
     {
       "id": "2",
-      "title": "Computer Vision for Healthcare Master",
-      "description": "Created an AI-driven medical",
+      "title": "AI Chat Bot",
+      "description": "With ZERO development experience, I built an AI Chatbot & AI Image Generator using Bubble with OpenAI integration in just a day.",
       "technologies": [
-        "PyTorch",
-        "Computer Vision",
-        "CUDA"
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Text Generation and Prompting"
       ],
-      "date": "February 2024"
+      "date": "May 2023",
+      "titleUrl": "https://chatapp-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
+      "mediaUrl": "/uploads/Screenshot 2025-05-17 at 7.51.30 PM-1747525940768-515897320.png",
+      "mediaType": "image"
+    },
+    {
+      "id": "1747526638707",
+      "title": "AI Job Interview Practice Tool",
+      "description": "How to use it:\n\n1. Type Company and Role\n2. Click each button to generate behavioral questions and technical / hypothetical questions to practice\n3. Click answer guide button to review",
+      "technologies": [
+        "Bubble (No Code SaaS)",
+        "OpenAI API"
+      ],
+      "date": "July 2023",
+      "titleUrl": "https://job-interview-buddy.bubbleapps.io/version-test?debug_mode=true",
+      "mediaUrl": "/uploads/Screen Recording 2025-05-17 at 8.06.36 PM-1747526872890-998726735.mov",
+      "mediaType": "video"
+    },
+    {
+      "id": "1747526968740",
+      "title": "AI Cartoon Generator",
+      "description": "Bubble + Zapier + Visualization",
+      "technologies": [
+        "Zapier",
+        "Bubble (No Code SaaS)"
+      ],
+      "date": "August 2023",
+      "mediaUrl": "/uploads/Screen Recording 2025-05-17 at 8.13.46 PM-1747527345900-621055327.mov",
+      "mediaType": "video",
+      "titleUrl": "https://drive.google.com/file/d/174JL_7ZpCBUlOhlkO4mH6XeTkGK6khhN/view?usp=sharing"
     }
   ]
 }

@@ -1,37 +1,61 @@
 import { NextResponse } from 'next/server';
-import cloudinary from '@/lib/cloudinary';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
+import { existsSync } from 'fs';
 
 export async function POST(request: Request) {
+  console.log('Upload request received');
+  
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     
     if (!file) {
+      console.error('No file provided');
       return NextResponse.json(
         { error: 'No file provided' },
         { status: 400 }
       );
     }
 
-    // Convert file to base64
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const fileBase64 = `data:${file.type};base64,${buffer.toString('base64')}`;
-
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(fileBase64, {
-      resource_type: 'auto', // Automatically detect if it's an image or video
+    console.log('Processing file:', {
+      name: file.name,
+      type: file.type,
+      size: file.size
     });
 
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Create unique filename
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const filename = file.name.replace(/\.[^/.]+$/, "") + '-' + uniqueSuffix + path.extname(file.name);
+    
+    // Ensure uploads directory exists
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    if (!existsSync(uploadDir)) {
+      console.log('Creating uploads directory:', uploadDir);
+      await mkdir(uploadDir, { recursive: true });
+    }
+
+    const filePath = path.join(uploadDir, filename);
+    console.log('Writing file to:', filePath);
+    
+    await writeFile(filePath, buffer);
+    console.log('File written successfully');
+
+    const fileUrl = `/uploads/${filename}`;
+    console.log('File URL:', fileUrl);
+    
     return NextResponse.json({
-      url: result.secure_url,
-      public_id: result.public_id
+      url: fileUrl,
+      mediaType: file.type.startsWith('video/') ? 'video' : 'image'
     });
     
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json(
-      { error: 'Error uploading file' },
+      { error: error instanceof Error ? error.message : 'Error uploading file' },
       { status: 500 }
     );
   }

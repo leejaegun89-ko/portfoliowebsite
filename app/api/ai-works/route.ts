@@ -11,23 +11,12 @@ export async function GET() {
   try {
     const fileContent = await fs.readFile(dataFilePath, 'utf8');
     const data = JSON.parse(fileContent);
-
-    return new NextResponse(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error reading projects:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to fetch projects' }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+    return NextResponse.json(
+      { error: 'Failed to fetch projects' },
+      { status: 500 }
     );
   }
 }
@@ -35,63 +24,54 @@ export async function GET() {
 // POST to create or update a project
 export async function POST(request: Request) {
   try {
-    const { action, project } = await request.json();
     const fileContent = await fs.readFile(dataFilePath, 'utf8');
     const data = JSON.parse(fileContent);
-    
-    if (action === 'create') {
-      // Create new project with unique ID
+    const requestData = await request.json();
+
+    if (requestData.action === 'create') {
       const newProject = {
-        ...project,
-        id: Date.now().toString(), // Simple way to generate unique ID
-        technologies: project.technologies || []
+        ...requestData.project,
+        id: Date.now().toString()
       };
-      data.projects.unshift(newProject); // Add to the beginning of the array
-    } 
-    else if (action === 'update') {
-      // Update existing project
-      const projectIndex = data.projects.findIndex((p: any) => p.id === project.id);
+      data.projects.push(newProject);
+    } else if (requestData.action === 'update') {
+      const { id, ...updateData } = requestData.project;
+      const projectIndex = data.projects.findIndex((p: any) => p.id === id);
+      
       if (projectIndex === -1) {
-        return new NextResponse(
-          JSON.stringify({ error: 'Project not found' }),
-          {
-            status: 404,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
+        return NextResponse.json(
+          { error: 'Project not found' },
+          { status: 404 }
         );
       }
+
       data.projects[projectIndex] = {
         ...data.projects[projectIndex],
-        ...project,
-        technologies: project.technologies.filter((tech: string) => tech.trim() !== '')
+        ...updateData,
+        id,
+        technologies: updateData.technologies || [],
+        date: updateData.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
       };
-    }
-    else if (action === 'delete') {
-      // Delete project
-      data.projects = data.projects.filter((p: any) => p.id !== project.id);
-    }
-
-    // Write updated data back to file
-    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
-
-    return new NextResponse(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  } catch (error) {
-    console.error('Error managing project:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to manage project' }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    } else if (requestData.action === 'delete') {
+      const projectIndex = data.projects.findIndex((p: any) => p.id === requestData.project.id);
+      
+      if (projectIndex === -1) {
+        return NextResponse.json(
+          { error: 'Project not found' },
+          { status: 404 }
+        );
       }
+
+      data.projects.splice(projectIndex, 1);
+    }
+
+    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error updating projects:', error);
+    return NextResponse.json(
+      { error: 'Failed to update projects' },
+      { status: 500 }
     );
   }
 } 

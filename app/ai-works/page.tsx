@@ -11,12 +11,36 @@ interface Project {
   date: string;
   mediaUrl?: string;
   mediaType?: 'image' | 'video';
+  titleUrl?: string;
 }
 
 export default function AIWorks() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Add URL detection and conversion utility
+  const convertUrlsToLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-400 hover:text-green-300 underline transition-colors"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -75,26 +99,26 @@ export default function AIWorks() {
         .tech-tags {
           display: flex;
           flex-wrap: wrap;
-          gap: 16px;
+          gap: 8px;
           margin-top: 2rem;
         }
 
         .tech-tag {
-          background: rgba(34, 197, 94, 0.1);
+          background: rgba(34, 197, 94, 0.08);
           color: #4ade80;
-          padding: 12px 24px;
-          border-radius: 12px;
-          font-size: 16px;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 13px;
           font-weight: 500;
-          border: 1px solid rgba(74, 222, 128, 0.2);
+          letter-spacing: -0.01em;
+          border: 1px solid rgba(74, 222, 128, 0.15);
           transition: all 0.2s ease;
-          margin: 4px;
         }
 
         .tech-tag:hover {
-          background: rgba(34, 197, 94, 0.2);
-          border-color: rgba(74, 222, 128, 0.3);
-          transform: translateY(-2px);
+          background: rgba(34, 197, 94, 0.12);
+          border-color: rgba(74, 222, 128, 0.25);
+          transform: translateY(-1px);
         }
 
         .media-preview {
@@ -129,6 +153,10 @@ export default function AIWorks() {
 
         body {
           cursor: none;
+        }
+
+        .project-description a {
+          word-break: break-all;
         }
       `}</style>
 
@@ -169,37 +197,60 @@ export default function AIWorks() {
           {isLoading ? (
             <div className="text-center text-white">Loading...</div>
           ) : (
-            projects.map((project) => (
-              <div 
-                key={project.id}
-                className="project-card relative"
-              >
-                <div className="project-content">
-                  <span className="text-green-400 text-sm mb-4 block font-medium tracking-wider">{project.date}</span>
-                  <h2 className="text-5xl font-medium mb-8 transition-colors text-white">{project.title}</h2>
-                  {project.mediaUrl && (
-                    <div className="media-preview mb-8">
-                      {project.mediaType === 'video' ? (
-                        <video src={project.mediaUrl} controls />
+            projects
+              .sort((a, b) => {
+                // Convert date strings to Date objects for comparison
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                // Sort in descending order (newest first)
+                return dateB.getTime() - dateA.getTime();
+              })
+              .map((project) => (
+                <div 
+                  key={project.id}
+                  className="project-card relative"
+                >
+                  <div className="project-content">
+                    <span className="text-green-400 text-sm mb-4 block font-medium tracking-wider">{project.date}</span>
+                    <h2 className="text-5xl font-medium mb-8 transition-colors text-white">
+                      {project.titleUrl ? (
+                        <a
+                          href={project.titleUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-green-400 transition-colors"
+                        >
+                          {project.title}
+                        </a>
                       ) : (
-                        <img src={project.mediaUrl} alt={project.title} />
+                        project.title
                       )}
+                    </h2>
+                    {project.mediaUrl && (
+                      <div className="media-preview mb-8">
+                        {project.mediaType === 'video' ? (
+                          <video src={project.mediaUrl} controls />
+                        ) : (
+                          <img src={project.mediaUrl} alt={project.title} />
+                        )}
+                      </div>
+                    )}
+                    <p className="text-gray-300 mb-10 text-xl leading-relaxed whitespace-pre-wrap project-description">
+                      {convertUrlsToLinks(project.description)}
+                    </p>
+                    <div className="tech-tags">
+                      {project.technologies.map((tech, techIndex) => (
+                        <span 
+                          key={techIndex}
+                          className="tech-tag"
+                        >
+                          {tech}
+                        </span>
+                      ))}
                     </div>
-                  )}
-                  <p className="text-gray-300 mb-10 text-xl leading-relaxed">{project.description}</p>
-                  <div className="tech-tags">
-                    {project.technologies.map((tech, techIndex) => (
-                      <span 
-                        key={techIndex}
-                        className="tech-tag"
-                      >
-                        {tech}
-                      </span>
-                    ))}
                   </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
         </div>
       </div>

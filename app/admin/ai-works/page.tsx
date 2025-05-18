@@ -12,6 +12,7 @@ interface Project {
   newTech?: string;
   mediaUrl?: string;
   mediaType?: 'image' | 'video';
+  titleUrl?: string;
 }
 
 export default function AdminAIWorks() {
@@ -22,6 +23,29 @@ export default function AdminAIWorks() {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Add URL detection and conversion utility
+  const convertUrlsToLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-400 hover:text-green-300 underline transition-colors"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -51,34 +75,71 @@ export default function AdminAIWorks() {
     formData.append('file', file);
 
     try {
+      setUploadStatus('idle');
+      
+      // Get current project index from editing project
+      const currentProjectIndex = projects.findIndex(p => p.id === editingProject?.id);
+      console.log('Uploading for project:', {
+        index: currentProjectIndex,
+        projectId: editingProject?.id,
+        fileName: file.name
+      });
+
+      if (currentProjectIndex === -1 || !editingProject) {
+        throw new Error('No project selected for upload');
+      }
+
+      // Show loading message
+      const loadingMessage = file.type.startsWith('video/') 
+        ? 'Uploading and processing video... This may take a few minutes.'
+        : 'Uploading file...';
+      alert(loadingMessage);
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Upload response status:', response.status);
+      const data = await response.json();
+      console.log('Upload response data:', data);
+
       if (!response.ok) {
-        throw new Error('Upload failed');
+        console.error('Upload error:', data);
+        throw new Error(data.error || 'Upload failed');
       }
 
-      const data = await response.json();
-      
-      // Update projects with the new media URL
+      console.log('Updating project with new media:', {
+        url: data.url,
+        mediaType: data.mediaType,
+        projectIndex: currentProjectIndex
+      });
+
       const updatedProjects = [...projects];
-      const projectIndex = selectedProjectIndex;
+      updatedProjects[currentProjectIndex] = {
+        ...updatedProjects[currentProjectIndex],
+        mediaUrl: data.url,
+        mediaType: data.mediaType
+      };
+      setProjects(updatedProjects);
       
-      if (projectIndex !== null && projectIndex >= 0) {
-        updatedProjects[projectIndex] = {
-          ...updatedProjects[projectIndex],
-          mediaUrl: data.url,
-        };
-        setProjects(updatedProjects);
-        saveProjects(updatedProjects);
-      }
+      // Update editing project
+      setEditingProject({
+        ...editingProject,
+        mediaUrl: data.url,
+        mediaType: data.mediaType
+      });
+      
+      // Save to backend
+      console.log('Saving updated projects to backend');
+      await saveProjects(updatedProjects);
+      alert('File uploaded and saved successfully!');
       
       setUploadStatus('success');
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Upload error:', error);
       setUploadStatus('error');
+      alert(error instanceof Error ? error.message : 'Failed to upload file. Please try again.');
     }
   };
 
@@ -134,26 +195,26 @@ export default function AdminAIWorks() {
         .tech-tags {
           display: flex;
           flex-wrap: wrap;
-          gap: 16px;
+          gap: 8px;
           margin-top: 2rem;
         }
 
         .tech-tag {
-          background: rgba(34, 197, 94, 0.1);
+          background: rgba(34, 197, 94, 0.08);
           color: #4ade80;
-          padding: 12px 24px;
-          border-radius: 12px;
-          font-size: 16px;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 13px;
           font-weight: 500;
-          border: 1px solid rgba(74, 222, 128, 0.2);
+          letter-spacing: -0.01em;
+          border: 1px solid rgba(74, 222, 128, 0.15);
           transition: all 0.2s ease;
-          margin: 4px;
         }
 
         .tech-tag:hover {
-          background: rgba(34, 197, 94, 0.2);
-          border-color: rgba(74, 222, 128, 0.3);
-          transform: translateY(-2px);
+          background: rgba(34, 197, 94, 0.12);
+          border-color: rgba(74, 222, 128, 0.25);
+          transform: translateY(-1px);
         }
 
         .edit-button {
@@ -193,8 +254,11 @@ export default function AdminAIWorks() {
         }
 
         .edit-form textarea {
-          min-height: 120px;
+          min-height: 200px;
           resize: vertical;
+          white-space: pre-wrap;
+          line-height: 1.6;
+          padding: 1rem;
         }
 
         .tech-input {
@@ -216,20 +280,21 @@ export default function AdminAIWorks() {
         .tech-tags-editor {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.5rem;
+          gap: 8px;
           margin-top: 0.5rem;
         }
 
         .tech-tag-editor {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          background: rgba(34, 197, 94, 0.1);
+          gap: 6px;
+          background: rgba(34, 197, 94, 0.08);
           color: #4ade80;
-          padding: 0.5rem 1rem;
-          border-radius: 8px;
-          font-size: 14px;
-          border: 1px solid rgba(74, 222, 128, 0.2);
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 13px;
+          letter-spacing: -0.01em;
+          border: 1px solid rgba(74, 222, 128, 0.15);
         }
 
         .delete-tag {
@@ -395,6 +460,7 @@ export default function AdminAIWorks() {
           margin: 1rem 0;
           border: 1px solid rgba(255, 255, 255, 0.1);
           background: rgba(0, 0, 0, 0.2);
+          position: relative;
         }
 
         .media-preview img,
@@ -405,23 +471,8 @@ export default function AdminAIWorks() {
           background: rgba(0, 0, 0, 0.2);
         }
 
-        .remove-media {
-          position: absolute;
-          top: 1rem;
-          right: 11rem;
-          padding: 0.4rem 0.8rem;
-          background: rgba(239, 68, 68, 0.1);
-          color: #ef4444;
-          border: 1px solid rgba(239, 68, 68, 0.2);
-          border-radius: 6px;
-          font-size: 12px;
-          font-weight: 500;
-          transition: all 0.2s ease;
-        }
-
-        .remove-media:hover {
-          background: rgba(239, 68, 68, 0.2);
-          border-color: rgba(239, 68, 68, 0.3);
+        .project-description a {
+          word-break: break-all;
         }
       `}</style>
 
@@ -514,7 +565,15 @@ export default function AdminAIWorks() {
           {isLoading ? (
             <div className="text-center text-white">Loading...</div>
           ) : (
-            projects.map((project, index) => (
+            projects
+              .sort((a, b) => {
+                // Convert date strings to Date objects for comparison
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                // Sort in descending order (newest first)
+                return dateB.getTime() - dateA.getTime();
+              })
+              .map((project, index) => (
               <div 
                 key={project.id}
                 className="project-card relative"
@@ -542,6 +601,16 @@ export default function AdminAIWorks() {
                         placeholder="Title"
                         className="text-4xl font-medium"
                       />
+                      <input
+                        type="text"
+                        value={editingProject.titleUrl || ''}
+                        onChange={(e) => setEditingProject({
+                          ...editingProject,
+                          titleUrl: e.target.value
+                        })}
+                        placeholder="Title URL (optional)"
+                        className="text-xl"
+                      />
                       <textarea
                         value={editingProject.description}
                         onChange={(e) => setEditingProject({
@@ -553,22 +622,42 @@ export default function AdminAIWorks() {
                       />
                       
                       {editingProject.mediaUrl ? (
-                        <div className="media-preview">
-                          {editingProject.mediaType === 'video' ? (
-                            <video src={editingProject.mediaUrl} controls />
-                          ) : (
-                            <img src={editingProject.mediaUrl} alt={editingProject.title} />
-                          )}
-                          <button
-                            className="remove-media"
-                            onClick={() => setEditingProject({
-                              ...editingProject,
-                              mediaUrl: undefined,
-                              mediaType: undefined
-                            })}
-                          >
-                            Remove Media
-                          </button>
+                        <div className="relative bg-black/20 border-2 border-gray-800 rounded-xl p-4 my-4">
+                          <div className="flex justify-between items-start mb-4">
+                            <div className="bg-black rounded-lg overflow-hidden">
+                              {editingProject.mediaType === 'video' ? (
+                                <video 
+                                  src={editingProject.mediaUrl} 
+                                  controls 
+                                  className="w-full h-[250px] object-contain"
+                                />
+                              ) : (
+                                <img 
+                                  src={editingProject.mediaUrl} 
+                                  alt={editingProject.title} 
+                                  className="w-full h-[250px] object-contain"
+                                />
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm('이 미디어를 삭제하시겠습니까?')) {
+                                  setEditingProject({
+                                    ...editingProject,
+                                    mediaUrl: undefined,
+                                    mediaType: undefined
+                                  });
+                                }
+                              }}
+                              className="flex items-center gap-2 ml-4 px-3 py-2 bg-black/30 hover:bg-red-500/20 border border-gray-700 hover:border-red-500/50 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-200"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                              </svg>
+                              삭제
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <label className="media-upload">
@@ -580,14 +669,34 @@ export default function AdminAIWorks() {
                               const file = e.target.files?.[0];
                               if (!file) return;
 
-                              await handleFileUpload(file);
+                              // Check file type and size
+                              const isVideo = file.type.startsWith('video/');
+                              const isImage = file.type.startsWith('image/');
+                              
+                              if (!isVideo && !isImage) {
+                                alert('이미지나 비디오 파일만 업로드 가능합니다.');
+                                return;
+                              }
+
+                              const maxSize = 100 * 1024 * 1024; // 100MB
+                              if (file.size > maxSize) {
+                                alert('파일 크기는 100MB 이하여야 합니다.');
+                                return;
+                              }
+
+                              try {
+                                await handleFileUpload(file);
+                              } catch (error) {
+                                console.error('Upload error:', error);
+                                alert('파일 업로드에 실패했습니다.');
+                              }
                             }}
                           />
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="text-green-400">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                           </svg>
-                          <span className="text-green-400">Upload image or video</span>
-                          <span className="text-gray-500 text-xs">Supports images and videos</span>
+                          <span className="text-green-400">이미지/비디오 업로드</span>
+                          <span className="text-gray-500 text-xs">최대 100MB</span>
                         </label>
                       )}
 
@@ -653,27 +762,38 @@ export default function AdminAIWorks() {
                           onClick={async () => {
                             setIsSaving(true);
                             try {
+                              // Create a copy of the project without newTech
+                              const projectToSave = {
+                                ...editingProject,
+                                newTech: undefined,
+                                // Make sure we're explicitly handling media fields
+                                mediaUrl: editingProject.mediaUrl || null,
+                                mediaType: editingProject.mediaType || null
+                              };
+
+                              console.log('Saving project:', projectToSave);
+
                               const response = await fetch('/api/ai-works', {
                                 method: 'POST',
                                 headers: {
                                   'Content-Type': 'application/json',
                                 },
                                 body: JSON.stringify({
-                                  action: editingProject.id ? 'update' : 'create',
-                                  project: {
-                                    ...editingProject,
-                                    newTech: undefined
-                                  }
+                                  action: 'update',
+                                  project: projectToSave
                                 }),
                               });
 
-                              if (response.ok) {
-                                const data = await response.json();
-                                setProjects(data.projects);
-                                setEditingProject(null);
-                              } else {
+                              if (!response.ok) {
                                 throw new Error('Failed to save project');
                               }
+
+                              const data = await response.json();
+                              console.log('Save response:', data);
+                              
+                              // Update both the projects list and clear editing state
+                              setProjects(data.projects);
+                              setEditingProject(null);
                             } catch (error) {
                               console.error('Error saving project:', error);
                               alert('Failed to save project. Please try again.');
@@ -717,12 +837,12 @@ export default function AdminAIWorks() {
                                 }),
                               });
 
-                              if (response.ok) {
-                                const data = await response.json();
-                                setProjects(data.projects);
-                              } else {
+                              if (!response.ok) {
                                 throw new Error('Failed to delete project');
                               }
+
+                              const data = await response.json();
+                              setProjects(data.projects);
                             } catch (error) {
                               console.error('Error deleting project:', error);
                               alert('Failed to delete project. Please try again.');
@@ -734,17 +854,44 @@ export default function AdminAIWorks() {
                         Delete
                       </button>
                       <span className="text-green-400 text-sm mb-4 block font-medium tracking-wider">{project.date}</span>
-                      <h2 className="text-5xl font-medium mb-8 transition-colors text-white">{project.title}</h2>
+                      <h2 className="text-5xl font-medium mb-8 transition-colors text-white">
+                        {project.titleUrl ? (
+                          <a
+                            href={project.titleUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-green-400 transition-colors"
+                          >
+                            {project.title}
+                          </a>
+                        ) : (
+                          project.title
+                        )}
+                      </h2>
+                      
                       {project.mediaUrl && (
-                        <div className="media-preview mb-8">
-                          {project.mediaType === 'video' ? (
-                            <video src={project.mediaUrl} controls />
-                          ) : (
-                            <img src={project.mediaUrl} alt={project.title} />
-                          )}
+                        <div className="relative bg-black/20 border-2 border-gray-800 rounded-xl p-4 mb-8">
+                          <div className="bg-black rounded-lg overflow-hidden">
+                            {project.mediaType === 'video' ? (
+                              <video 
+                                src={project.mediaUrl} 
+                                controls 
+                                className="w-full h-[250px] object-contain"
+                              />
+                            ) : (
+                              <img 
+                                src={project.mediaUrl} 
+                                alt={project.title} 
+                                className="w-full h-[250px] object-contain"
+                              />
+                            )}
+                          </div>
                         </div>
                       )}
-                      <p className="text-gray-300 mb-10 text-xl leading-relaxed">{project.description}</p>
+                      
+                      <p className="text-gray-300 mb-10 text-xl leading-relaxed whitespace-pre-wrap project-description">
+                        {convertUrlsToLinks(project.description)}
+                      </p>
                       <div className="tech-tags">
                         {project.technologies.map((tech, techIndex) => (
                           <span 
