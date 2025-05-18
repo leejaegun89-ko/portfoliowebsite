@@ -11,8 +11,8 @@
         "Audio Visualization API"
       ],
       "date": "August 2023",
-      "mediaUrl": "/uploads/Screenshot 2025-05-17 at 8.03.22 PM-1747526612760-368855802.png",
-      "mediaType": "image",
+      "mediaUrl": null,
+      "mediaType": null,
       "titleUrl": "https://text-to-speech-42991.bubbleapps.io/version-test?debug_mode=true"
     },
     {
@@ -41,8 +41,8 @@
       "date": "May 2023",
       "newTech": "",
       "titleUrl": "http://ai-image-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
-      "mediaUrl": "/uploads/Screenshot 2025-05-17 at 7.52.40 PM-1747525972097-639978774.png",
-      "mediaType": "image"
+      "mediaUrl": null,
+      "mediaType": null
     },
     {
       "id": "2",
@@ -55,8 +55,8 @@
       ],
       "date": "May 2023",
       "titleUrl": "https://chatapp-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
-      "mediaUrl": "/uploads/Screenshot 2025-05-17 at 7.51.30 PM-1747525940768-515897320.png",
-      "mediaType": "image"
+      "mediaUrl": null,
+      "mediaType": null
     },
     {
       "id": "1747526638707",
@@ -82,7 +82,7 @@
       "date": "August 2023",
       "mediaUrl": "/uploads/Screen Recording 2025-05-17 at 8.13.46 PM-1747527345900-621055327.mov",
       "mediaType": "video",
-      "titleUrl": "https://drive.google.com/file/d/174JL_7ZpCBUlOhlkO4mH6XeTkGK6khhN/view?usp=sharing"
+      "titleUrl": ""
     }
   ]
 }
