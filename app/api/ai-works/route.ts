@@ -1,99 +1,54 @@
 import { NextResponse } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-const projects = {
-  "projects": [
-    {
-      "id": "1747516525263",
-      "title": "Audio to Text, and Translate",
-      "description": "How to use it:\n\n1) Click Record / Stop to start and stop your recording. Speak while recording\n2) Click Record / Stop again to end the recording\n3) Click Play / Stop to listen to your recording\n4) Click Play / Stop again to stop playback\n5) Click Save to save your recording\n6) Click Transcription to generate a transcript of your recording\n7) Enter the target language you want to translate to, then click Translate.",
-      "technologies": [
-        "Bubble (No Code SaaS)",
-        "OpenAI API",
-        "Text Generation and Prompting",
-        "Audio Visualization API"
-      ],
-      "date": "August 2023",
-      "mediaUrl": null,
-      "mediaType": null,
-      "titleUrl": "https://text-to-speech-42991.bubbleapps.io/version-test?debug_mode=true"
-    },
-    {
-      "id": "1747516212117",
-      "title": "AI Fitness Workout Planner",
-      "description": "Built an AI Workout Plan Builder!🏋️‍♀️\n\n1. Select your workout intensity to match your vibe.\n2. Type which muscle(s) you are crushing on today.",
-      "technologies": [
-        "Bubble (No Code SaaS)",
-        "OpenAI API",
-        "Text Generation and Prompting"
-      ],
-      "date": "June 2023",
-      "titleUrl": "https://workout-plan-by-jae-lee.bubbleapps.io/version-test?debug_mode=true",
-      "mediaUrl": "v1747533516/AI_Fitness_Planner-1747524870356-828760369_y3owgl.mov",
-      "mediaType": "video"
-    },
-    {
-      "id": "1",
-      "title": "AI Image Generator",
-      "description": "With ZERO development experience, I built an AI Chatbot & AI Image Generator using Bubble with OpenAI integration in just a day.",
-      "technologies": [
-        "Bubble (No Code SaaS)",
-        "OpenAI API",
-        "Image Generation"
-      ],
-      "date": "May 2023",
-      "newTech": "",
-      "titleUrl": "http://ai-image-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
-      "mediaUrl": null,
-      "mediaType": null
-    },
-    {
-      "id": "2",
-      "title": "AI Chat Bot",
-      "description": "With ZERO development experience, I built an AI Chatbot & AI Image Generator using Bubble with OpenAI integration in just a day.",
-      "technologies": [
-        "Bubble (No Code SaaS)",
-        "OpenAI API",
-        "Text Generation and Prompting"
-      ],
-      "date": "May 2023",
-      "titleUrl": "https://chatapp-by-jae-lee.bubbleapps.io/version-test/?debug_mode=true",
-      "mediaUrl": null,
-      "mediaType": null
-    },
-    {
-      "id": "1747526638707",
-      "title": "AI Job Interview Practice Tool",
-      "description": "How to use it:\n\n1. Type Company and Role\n2. Click each button to generate behavioral questions and technical / hypothetical questions to practice\n3. Click answer guide button to review",
-      "technologies": [
-        "Bubble (No Code SaaS)",
-        "OpenAI API"
-      ],
-      "date": "July 2023",
-      "titleUrl": "https://job-interview-buddy.bubbleapps.io/version-test?debug_mode=true",
-      "mediaUrl": "v1747533473/AI_Job_Interview_Practice_hqwthr.mov",
-      "mediaType": "video"
-    },
-    {
-      "id": "1747526968740",
-      "title": "AI Cartoon Generator",
-      "description": "Bubble + Zapier + Visualization",
-      "technologies": [
-        "Zapier",
-        "Bubble (No Code SaaS)"
-      ],
-      "date": "August 2023",
-      "mediaUrl": "v1747533518/AI_Cartoon_Generator_jdwbqf.mov",
-      "mediaType": "video",
-      "titleUrl": ""
+const DATA_FILE_PATH = path.join(process.cwd(), 'data', 'projects.json');
+
+// Initialize data directory and file if they don't exist
+async function initializeDataFile() {
+  try {
+    const dataDir = path.join(process.cwd(), 'data');
+    await fs.mkdir(dataDir, { recursive: true });
+    
+    try {
+      await fs.access(DATA_FILE_PATH);
+    } catch {
+      // File doesn't exist, create it with initial data
+      await fs.writeFile(DATA_FILE_PATH, JSON.stringify({ projects: [] }, null, 2));
     }
-  ]
-};
+  } catch (error) {
+    console.error('Error initializing data file:', error);
+  }
+}
+
+// Read projects from file
+async function readProjects() {
+  try {
+    await initializeDataFile();
+    const data = await fs.readFile(DATA_FILE_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading projects:', error);
+    return { projects: [] };
+  }
+}
+
+// Write projects to file
+async function writeProjects(projects: any) {
+  try {
+    await fs.writeFile(DATA_FILE_PATH, JSON.stringify(projects, null, 2));
+  } catch (error) {
+    console.error('Error writing projects:', error);
+    throw error;
+  }
+}
 
 export const dynamic = 'force-dynamic';
 
 // GET all projects
 export async function GET() {
   try {
+    const projects = await readProjects();
     return NextResponse.json(projects);
   } catch (error) {
     console.error('Error reading projects:', error);
@@ -104,18 +59,68 @@ export async function GET() {
   }
 }
 
-// POST to create or update a project
+// POST to handle create, update, and delete operations
 export async function POST(request: Request) {
   try {
-    const requestData = await request.json();
-    return NextResponse.json(
-      { error: 'Updates not supported in production' },
-      { status: 400 }
-    );
+    const body = await request.json();
+    const { action, project } = body;
+
+    if (!action || !project) {
+      return NextResponse.json(
+        { error: 'Missing action or project data' },
+        { status: 400 }
+      );
+    }
+
+    const data = await readProjects();
+
+    switch (action) {
+      case 'create':
+        // Add new project
+        data.projects.push(project);
+        break;
+
+      case 'update':
+        // Update existing project
+        const updateIndex = data.projects.findIndex((p: any) => p.id === project.id);
+        if (updateIndex === -1) {
+          return NextResponse.json(
+            { error: 'Project not found' },
+            { status: 404 }
+          );
+        }
+        data.projects[updateIndex] = project;
+        break;
+
+      case 'delete':
+        // Delete project
+        const deleteIndex = data.projects.findIndex((p: any) => p.id === project.id);
+        if (deleteIndex === -1) {
+          return NextResponse.json(
+            { error: 'Project not found' },
+            { status: 404 }
+          );
+        }
+        data.projects.splice(deleteIndex, 1);
+        break;
+
+      default:
+        return NextResponse.json(
+          { error: 'Invalid action' },
+          { status: 400 }
+        );
+    }
+
+    await writeProjects(data);
+
+    return NextResponse.json({
+      message: `Project ${action}d successfully`,
+      projects: data.projects
+    });
   } catch (error) {
-    console.error('Error updating projects:', error);
+    console.error('Error processing request:', error);
     return NextResponse.json(
-      { error: 'Failed to update projects' },
+      { error: 'Failed to process request' },
       { status: 500 }
     );
   }

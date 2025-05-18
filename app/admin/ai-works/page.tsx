@@ -10,8 +10,8 @@ interface Project {
   technologies: string[];
   date: string;
   newTech?: string;
-  mediaUrl?: string;
-  mediaType?: 'image' | 'video';
+  mediaUrl?: string | null;
+  mediaType?: 'image' | 'video' | null;
   titleUrl?: string;
 }
 
@@ -115,32 +115,39 @@ export default function AdminAIWorks() {
         projectIndex: currentProjectIndex
       });
 
-      const updatedProjects = [...projects];
-      updatedProjects[currentProjectIndex] = {
-        ...updatedProjects[currentProjectIndex],
-        mediaUrl: data.url,
-        mediaType: data.mediaType
-      };
-      setProjects(updatedProjects);
-      
-      // Update editing project
-      setEditingProject({
+      // Update editing project first
+      const updatedProject = {
         ...editingProject,
         mediaUrl: data.url,
         mediaType: data.mediaType
-      });
+      };
       
       // Save to backend
-      console.log('Saving updated projects to backend');
-      await saveProjects(updatedProjects);
+      console.log('Saving updated project to backend');
+      await saveProjects([updatedProject]);
+      
+      // Update local state
+      setEditingProject(updatedProject);
       alert('File uploaded and saved successfully!');
       
       setUploadStatus('success');
-    } catch (error) {
-      console.error('Upload error:', error);
-      setUploadStatus('error');
-      alert(error instanceof Error ? error.message : 'Failed to upload file. Please try again.');
-    }
+          } catch (error) {
+        console.error('Upload error:', error);
+        setUploadStatus('error');
+        
+        let errorMessage = '파일 업로드에 실패했습니다.';
+        if (error instanceof Error) {
+          errorMessage += ' 오류: ' + error.message;
+        }
+        
+        alert(errorMessage);
+        
+        // Reset editing state on error
+        const originalProject = projects.find(p => p.id === editingProject?.id);
+        if (originalProject) {
+          setEditingProject(originalProject);
+        }
+      }
   };
 
   const saveProjects = async (updatedProjects: Project[]) => {
@@ -150,14 +157,22 @@ export default function AdminAIWorks() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedProjects),
+        body: JSON.stringify({
+          action: 'update',
+          project: updatedProjects[0] // 현재는 한 번에 하나의 프로젝트만 업데이트
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save projects');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save projects');
       }
+
+      const data = await response.json();
+      setProjects(data.projects); // 서버에서 반환된 최신 프로젝트 목록으로 상태 업데이트
     } catch (error) {
       console.error('Error saving projects:', error);
+      throw error; // 에러를 상위로 전파하여 적절한 처리가 가능하도록 함
     }
   };
 
@@ -523,10 +538,13 @@ export default function AdminAIWorks() {
             onClick={async () => {
               const newProject = {
                 id: Date.now().toString(),
-                title: "New AI Project",
-                description: "Developed a sophisticated AI system that helps solve complex problems. Built with advanced machine learning models and innovative algorithms to provide intelligent solutions.",
-                technologies: ["AI", "Machine Learning", "Python"],
-                date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+                title: "새 프로젝트 제목",
+                description: "프로젝트 설명을 여기에 작성하세요.",
+                technologies: ["기술 1", "기술 2"],
+                date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+                mediaUrl: null,
+                mediaType: null,
+                titleUrl: ""
               };
 
               try {
@@ -541,15 +559,17 @@ export default function AdminAIWorks() {
                   }),
                 });
 
-                if (response.ok) {
-                  const data = await response.json();
-                  setProjects(data.projects);
-                } else {
-                  throw new Error('Failed to create project');
+                if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(errorData.error || 'Failed to create project');
                 }
+
+                const data = await response.json();
+                setProjects(data.projects);
+                setEditingProject(newProject); // 생성 후 바로 편집 모드로 전환
               } catch (error) {
                 console.error('Error creating project:', error);
-                alert('Failed to create project. Please try again.');
+                alert('새 프로젝트 생성에 실패했습니다. 다시 시도해주세요.');
               }
             }}
             className="add-project text-xl py-4 px-8"
@@ -627,13 +647,13 @@ export default function AdminAIWorks() {
                             <div className="bg-black rounded-lg overflow-hidden">
                               {editingProject.mediaType === 'video' ? (
                                 <video 
-                                  src={editingProject.mediaUrl} 
+                                  src={editingProject.mediaUrl}
                                   controls 
                                   className="w-full h-[250px] object-contain"
                                 />
                               ) : (
                                 <img 
-                                  src={editingProject.mediaUrl} 
+                                  src={editingProject.mediaUrl}
                                   alt={editingProject.title} 
                                   className="w-full h-[250px] object-contain"
                                 />
@@ -824,7 +844,7 @@ export default function AdminAIWorks() {
                       </button>
                       <button
                         onClick={async () => {
-                          if (window.confirm('Are you sure you want to delete this project?')) {
+                          if (window.confirm('이 프로젝트를 삭제하시겠습니까?')) {
                             try {
                               const response = await fetch('/api/ai-works', {
                                 method: 'POST',
@@ -833,19 +853,20 @@ export default function AdminAIWorks() {
                                 },
                                 body: JSON.stringify({
                                   action: 'delete',
-                                  project: { id: project.id }
+                                  project: project
                                 }),
                               });
 
                               if (!response.ok) {
-                                throw new Error('Failed to delete project');
+                                const errorData = await response.json();
+                                throw new Error(errorData.error || 'Failed to delete project');
                               }
 
                               const data = await response.json();
                               setProjects(data.projects);
                             } catch (error) {
                               console.error('Error deleting project:', error);
-                              alert('Failed to delete project. Please try again.');
+                              alert('프로젝트 삭제에 실패했습니다. 다시 시도해주세요.');
                             }
                           }
                         }}
@@ -874,13 +895,13 @@ export default function AdminAIWorks() {
                           <div className="bg-black rounded-lg overflow-hidden">
                             {project.mediaType === 'video' ? (
                               <video 
-                                src={project.mediaUrl} 
+                                src={project.mediaUrl}
                                 controls 
                                 className="w-full h-[250px] object-contain"
                               />
                             ) : (
                               <img 
-                                src={project.mediaUrl} 
+                                src={project.mediaUrl}
                                 alt={project.title} 
                                 className="w-full h-[250px] object-contain"
                               />
