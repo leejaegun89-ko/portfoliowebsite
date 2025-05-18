@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { CldVideoPlayer } from 'next-cloudinary';
+import 'next-cloudinary/dist/cld-video-player.css';
 
 interface Project {
   id: string;
@@ -229,7 +231,16 @@ export default function AIWorks() {
                     {project.mediaUrl && (
                       <div className="media-preview mb-8">
                         {project.mediaType === 'video' ? (
-                          <video src={project.mediaUrl} controls />
+                          <CldVideoPlayer
+                            width="1920"
+                            height="1080"
+                            src={project.mediaUrl}
+                            colors={{
+                              base: '#4ade80',
+                              text: '#fff',
+                              accent: '#4ade80'
+                            }}
+                          />
                         ) : (
                           <img src={project.mediaUrl} alt={project.title} />
                         )}

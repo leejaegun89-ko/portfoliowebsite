@@ -1,17 +1,69 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
 
-const dataFilePath = path.join(process.cwd(), 'app/data/ai-works.json');
+const projects = {
+  "projects": [
+    {
+      "id": "1747516525263",
+      "title": "Audio to Text, and Translate",
+      "description": "How to use it:\n\n1) Click Record / Stop to start and stop your recording. Speak while recording\n2) Click Record / Stop again to end the recording\n3) Click Play / Stop to listen to your recording\n4) Click Play / Stop again to stop playback\n5) Click Save to save your recording\n6) Click Transcription to generate a transcript of your recording\n7) Enter the target language you want to translate to, then click Translate.",
+      "technologies": [
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Text Generation and Prompting",
+        "Audio Visualization API"
+      ],
+      "date": "August 2023",
+      "titleUrl": "https://text-to-speech-42991.bubbleapps.io/version-test?debug_mode=true"
+    },
+    {
+      "id": "1747516212117",
+      "title": "AI Fitness Workout Planner",
+      "description": "Built an AI Workout Plan Builder!🏋️‍♀️\n\n1. Select your workout intensity to match your vibe.\n2. Type which muscle(s) you are crushing on today.",
+      "technologies": [
+        "Bubble (No Code SaaS)",
+        "OpenAI API",
+        "Text Generation and Prompting"
+      ],
+      "date": "June 2023",
+      "titleUrl": "https://workout-plan-by-jae-lee.bubbleapps.io/version-test?debug_mode=true",
+      "mediaUrl": "https://res.cloudinary.com/your_cloud_name/video/upload/v1/portfolio-media/AI_Fitness_Planner-1747525212197-823888478",
+      "mediaType": "video"
+    },
+    {
+      "id": "1747526638707",
+      "title": "AI Job Interview Practice Tool",
+      "description": "How to use it:\n\n1. Type Company and Role\n2. Click each button to generate behavioral questions and technical / hypothetical questions to practice\n3. Click answer guide button to review",
+      "technologies": [
+        "Bubble (No Code SaaS)",
+        "OpenAI API"
+      ],
+      "date": "July 2023",
+      "titleUrl": "https://job-interview-buddy.bubbleapps.io/version-test?debug_mode=true",
+      "mediaUrl": "https://res.cloudinary.com/your_cloud_name/video/upload/v1/portfolio-media/Screen_Recording_2025-05-17_at_8.06.36_PM-1747526872890-998726735",
+      "mediaType": "video"
+    },
+    {
+      "id": "1747526968740",
+      "title": "AI Cartoon Generator",
+      "description": "Bubble + Zapier + Visualization",
+      "technologies": [
+        "Zapier",
+        "Bubble (No Code SaaS)"
+      ],
+      "date": "August 2023",
+      "mediaUrl": "https://res.cloudinary.com/your_cloud_name/video/upload/v1/portfolio-media/Screen_Recording_2025-05-17_at_8.13.46_PM-1747527345900-621055327",
+      "mediaType": "video",
+      "titleUrl": ""
+    }
+  ]
+};
 
 export const dynamic = 'force-dynamic';
 
 // GET all projects
 export async function GET() {
   try {
-    const fileContent = await fs.readFile(dataFilePath, 'utf8');
-    const data = JSON.parse(fileContent);
-    return NextResponse.json(data);
+    return NextResponse.json(projects);
   } catch (error) {
     console.error('Error reading projects:', error);
     return NextResponse.json(
@@ -24,49 +76,11 @@ export async function GET() {
 // POST to create or update a project
 export async function POST(request: Request) {
   try {
-    const fileContent = await fs.readFile(dataFilePath, 'utf8');
-    const data = JSON.parse(fileContent);
     const requestData = await request.json();
-
-    if (requestData.action === 'create') {
-      const newProject = {
-        ...requestData.project,
-        id: Date.now().toString()
-      };
-      data.projects.push(newProject);
-    } else if (requestData.action === 'update') {
-      const { id, ...updateData } = requestData.project;
-      const projectIndex = data.projects.findIndex((p: any) => p.id === id);
-      
-      if (projectIndex === -1) {
-        return NextResponse.json(
-          { error: 'Project not found' },
-          { status: 404 }
-        );
-      }
-
-      data.projects[projectIndex] = {
-        ...data.projects[projectIndex],
-        ...updateData,
-        id,
-        technologies: updateData.technologies || [],
-        date: updateData.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
-      };
-    } else if (requestData.action === 'delete') {
-      const projectIndex = data.projects.findIndex((p: any) => p.id === requestData.project.id);
-      
-      if (projectIndex === -1) {
-        return NextResponse.json(
-          { error: 'Project not found' },
-          { status: 404 }
-        );
-      }
-
-      data.projects.splice(projectIndex, 1);
-    }
-
-    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
-    return NextResponse.json(data);
+    return NextResponse.json(
+      { error: 'Updates not supported in production' },
+      { status: 400 }
+    );
   } catch (error) {
     console.error('Error updating projects:', error);
     return NextResponse.json(
