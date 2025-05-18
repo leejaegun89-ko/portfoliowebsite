@@ -231,11 +231,16 @@ export default function AIWorks() {
                     {project.mediaUrl && (
                       <div className="media-preview mb-8">
                         {project.mediaType === 'video' ? (
-                          <video 
-                            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${project.mediaUrl}`}
-                            controls
-                            className="w-full h-[250px] object-contain"
-                          />
+                          <>
+                            <video 
+                              src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${project.mediaUrl}`}
+                              controls
+                              className="w-full h-[250px] object-contain"
+                            />
+                            <div className="mt-2 text-xs text-gray-500">
+                              Debug URL: {`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${project.mediaUrl}`}
+                            </div>
+                          </>
                         ) : (
                           <img src={project.mediaUrl} alt={project.title} />
                         )}
