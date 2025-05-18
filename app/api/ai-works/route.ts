@@ -26,7 +26,7 @@ const projects = {
       ],
       "date": "June 2023",
       "titleUrl": "https://workout-plan-by-jae-lee.bubbleapps.io/version-test?debug_mode=true",
-      "mediaUrl": "https://res.cloudinary.com/your_cloud_name/video/upload/v1/portfolio-media/AI_Fitness_Planner-1747525212197-823888478",
+      "mediaUrl": "https://res.cloudinary.com/dxqjlxmxh/video/upload/v1/portfolio-media/AI_Fitness_Planner-1747525212197-823888478",
       "mediaType": "video"
     },
     {
@@ -39,7 +39,7 @@ const projects = {
       ],
       "date": "July 2023",
       "titleUrl": "https://job-interview-buddy.bubbleapps.io/version-test?debug_mode=true",
-      "mediaUrl": "https://res.cloudinary.com/your_cloud_name/video/upload/v1/portfolio-media/Screen_Recording_2025-05-17_at_8.06.36_PM-1747526872890-998726735",
+      "mediaUrl": "https://res.cloudinary.com/dxqjlxmxh/video/upload/v1/portfolio-media/Screen_Recording_2025-05-17_at_8.06.36_PM-1747526872890-998726735",
       "mediaType": "video"
     },
     {
@@ -51,7 +51,7 @@ const projects = {
         "Bubble (No Code SaaS)"
       ],
       "date": "August 2023",
-      "mediaUrl": "https://res.cloudinary.com/your_cloud_name/video/upload/v1/portfolio-media/Screen_Recording_2025-05-17_at_8.13.46_PM-1747527345900-621055327",
+      "mediaUrl": "https://res.cloudinary.com/dxqjlxmxh/video/upload/v1/portfolio-media/Screen_Recording_2025-05-17_at_8.13.46_PM-1747527345900-621055327",
       "mediaType": "video",
       "titleUrl": ""
     }
