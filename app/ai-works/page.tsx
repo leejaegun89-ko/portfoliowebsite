@@ -234,7 +234,7 @@ export default function AIWorks() {
                           <CldVideoPlayer
                             width="1920"
                             height="1080"
-                            src={project.mediaUrl}
+                            src={`portfolio-media/${project.mediaUrl}`}
                             colors={{
                               base: '#4ade80',
                               text: '#fff',
