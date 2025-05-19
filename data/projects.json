@@ -96,7 +96,7 @@
         "Github",
         "Vercel"
       ],
-      "date": "May 2025",
+      "date": "April 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747535140/portfolio-media/kbj9z6yfrefizpfq79qn.mov",
       "mediaType": "video",
       "titleUrl": "https://documentuploadextract.vercel.app/"
@@ -113,10 +113,25 @@
         "Github",
         "Vercel"
       ],
-      "date": "May 2025",
+      "date": "April 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747534961/portfolio-media/yecgiqmaeuz5oueuq2wc.mov",
       "mediaType": "video",
       "titleUrl": "https://lunchmenu-khaki.vercel.app/"
+    },
+    {
+      "id": "1747620818726",
+      "title": "AI Image Prompt Generator",
+      "description": "Upload any image you’d like to generate or enhance using AI. You can also explore how others created their AI images with this tool—get inspired, generate your own prompts, and try it yourself!",
+      "technologies": [
+        "Cursor AI",
+        "Google Vision AI",
+        "Vercel",
+        "Github"
+      ],
+      "date": "June 2025",
+      "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747621057/portfolio-media/uqucyoygkpje9ah6k0i5.mov",
+      "mediaType": "video",
+      "titleUrl": "https://imageuploaderandpromptgenerator.vercel.app/"
     }
   ]
 }
