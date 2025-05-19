@@ -73,92 +73,118 @@ export default function AIWorks() {
         body {
           overflow-y: auto !important;
         }
-        
         .project-card {
           width: 100%;
-          max-width: 1000px;
+          max-width: 700px;
           margin: 2.5rem auto;
-          transition: all 0.3s ease;
+          transition: box-shadow 0.3s;
+          border-radius: 20px;
+          box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
+          background: linear-gradient(135deg, rgba(30,41,59,0.95) 60%, rgba(16,185,129,0.07) 100%);
+          border: 1.5px solid rgba(255,255,255,0.08);
         }
-
         .project-content {
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 24px;
-          padding: 3.5rem;
-          transform: translateZ(0);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
-                     0 0 0 1px rgba(255, 255, 255, 0.1);
-          transition: all 0.3s ease;
-        }
-
-        .project-content:hover {
-          border-color: rgba(255, 255, 255, 0.2);
-          transform: translateY(-4px);
-        }
-
-        .tech-tags {
+          padding: 2.5rem 2rem 2rem 2rem;
           display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 2rem;
+          flex-direction: column;
+          gap: 1.5rem;
         }
-
-        .tech-tag {
-          background: rgba(34, 197, 94, 0.08);
-          color: #4ade80;
-          padding: 6px 12px;
-          border-radius: 6px;
-          font-size: 13px;
-          font-weight: 500;
-          letter-spacing: -0.01em;
-          border: 1px solid rgba(74, 222, 128, 0.15);
-          transition: all 0.2s ease;
+        .project-date {
+          color: #67e8f9;
+          font-size: 1rem;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          margin-bottom: 0.2rem;
         }
-
-        .tech-tag:hover {
-          background: rgba(34, 197, 94, 0.12);
-          border-color: rgba(74, 222, 128, 0.25);
-          transform: translateY(-1px);
+        .project-title {
+          font-size: 2.2rem;
+          font-weight: 700;
+          color: #fff;
+          margin-bottom: 0.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
-
+        .project-title a {
+          color: #38bdf8;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+        }
+        .project-title a:hover {
+          color: #34d399;
+          text-decoration: underline;
+        }
         .media-preview {
           width: 100%;
-          max-height: 250px;
-          border-radius: 8px;
+          max-height: 320px;
+          border-radius: 14px;
           overflow: hidden;
-          margin: 1rem 0;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background: rgba(0, 0, 0, 0.2);
+          margin: 0.5rem 0 1.2rem 0;
+          border: 1.5px solid rgba(255,255,255,0.10);
+          background: rgba(0,0,0,0.18);
+          box-shadow: 0 2px 16px 0 rgba(16,185,129,0.08);
         }
-
         .media-preview img,
         .media-preview video {
           width: 100%;
-          height: 250px;
+          height: 320px;
           object-fit: contain;
-          background: rgba(0, 0, 0, 0.2);
+          background: #18181b;
         }
-
-        .custom-cursor {
-          width: 30px;
-          height: 30px;
-          background-color: var(--cursor-color);
-          border-radius: 50%;
-          position: fixed;
-          pointer-events: none;
-          mix-blend-mode: difference;
-          transition: transform 0.2s ease;
-          z-index: 9999;
+        .project-description {
+          color: #e5e7eb;
+          font-size: 1.13rem;
+          line-height: 1.8;
+          margin-bottom: 0.5rem;
+          white-space: pre-wrap;
+          word-break: break-word;
         }
-
-        body {
-          cursor: none;
-        }
-
         .project-description a {
+          color: #38bdf8;
           word-break: break-all;
+        }
+        .project-description a:hover {
+          color: #34d399;
+          text-decoration: underline;
+        }
+        .tech-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+        }
+        .tech-tag {
+          background: rgba(16,185,129,0.13);
+          color: #34d399;
+          padding: 0.45em 1.1em;
+          border-radius: 999px;
+          font-size: 0.98rem;
+          font-weight: 500;
+          border: 1px solid rgba(52,211,153,0.18);
+          transition: background 0.2s, color 0.2s, border 0.2s;
+        }
+        .tech-tag:hover {
+          background: rgba(16,185,129,0.22);
+          color: #67e8f9;
+          border: 1px solid #67e8f9;
+        }
+        @media (max-width: 600px) {
+          .project-card {
+            max-width: 98vw;
+            margin: 1.2rem auto;
+          }
+          .project-content {
+            padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+          }
+          .media-preview img,
+          .media-preview video {
+            height: 180px;
+          }
+          .project-title {
+            font-size: 1.3rem;
+          }
         }
       `}</style>
 
@@ -201,50 +227,48 @@ export default function AIWorks() {
           ) : (
             projects
               .sort((a, b) => {
-                // Convert date strings to Date objects for comparison
                 const dateA = new Date(a.date);
                 const dateB = new Date(b.date);
-                // Sort in descending order (newest first)
                 return dateB.getTime() - dateA.getTime();
               })
               .map((project) => (
                 <div 
                   key={project.id}
-                  className="project-card relative"
+                  className="project-card"
                 >
                   <div className="project-content">
-                    <span className="text-green-400 text-sm mb-4 block font-medium tracking-wider">{project.date}</span>
-                    <h2 className="text-5xl font-medium mb-8 transition-colors text-white">
+                    <span className="project-date">{project.date}</span>
+                    <div className="project-title">
                       {project.titleUrl ? (
                         <a
                           href={project.titleUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:text-green-400 transition-colors"
                         >
                           {project.title}
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 3h7m0 0v7m0-7L10 14m-4 7h7a2 2 0 002-2v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z"/></svg>
                         </a>
                       ) : (
                         project.title
                       )}
-                    </h2>
+                    </div>
                     {project.mediaUrl && (
-                      <div className="media-preview mb-8">
+                      <div className="media-preview">
                         {project.mediaType === 'video' ? (
                           <video
                             src={project.mediaUrl}
                             controls
-                            className="w-full h-[250px] object-contain"
+                            className="w-full h-full object-contain"
                             playsInline
                           />
                         ) : (
-                          <img src={project.mediaUrl} alt={project.title} className="w-full h-[250px] object-contain" />
+                          <img src={project.mediaUrl} alt={project.title} className="w-full h-full object-contain" />
                         )}
                       </div>
                     )}
-                    <p className="text-gray-300 mb-10 text-xl leading-relaxed whitespace-pre-wrap project-description">
+                    <div className="project-description">
                       {convertUrlsToLinks(project.description)}
-                    </p>
+                    </div>
                     <div className="tech-tags">
                       {project.technologies.map((tech, techIndex) => (
                         <span 
