@@ -121,7 +121,7 @@
     {
       "id": "1747620818726",
       "title": "AI Image Prompt Generator",
-      "description": "Upload any image you’d like to generate or enhance using AI. You can also explore how others created their AI images with this tool—get inspired, generate your own prompts, and try it yourself!",
+      "description": "Upload any image to generate a prompt. You can then use the prompt with your favorite AI image generation tool. Try yourself and have fun!",
       "technologies": [
         "Cursor AI",
         "Google Vision AI",
