@@ -113,7 +113,7 @@
         "Github",
         "Vercel"
       ],
-      "date": "April 2025",
+      "date": "March 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747534961/portfolio-media/yecgiqmaeuz5oueuq2wc.mov",
       "mediaType": "video",
       "titleUrl": "https://lunchmenu-khaki.vercel.app/"
@@ -128,10 +128,24 @@
         "Vercel",
         "Github"
       ],
-      "date": "June 2025",
+      "date": "May 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747621057/portfolio-media/uqucyoygkpje9ah6k0i5.mov",
       "mediaType": "video",
       "titleUrl": "https://imageuploaderandpromptgenerator.vercel.app/"
+    },
+    {
+      "id": "1748132596200",
+      "title": "AI Resume Optimizer",
+      "description": "This AI-powered resume optimization tool helps tailor your resume to a specific job description. Simply paste the job description into the JD section, enter the company’s website for deeper contextual relevance, and upload your resume. Then, click Optimize Resume.\n\nThe tool will update only the content of your bullet points and visually highlight the changes. You can easily copy and paste the modified bullet points back into your resume and reformat them as needed.\n\nWhile I aimed to support downloads in the original file format, I haven't yet found a reliable solution for that — further exploration is underway.",
+      "technologies": [
+        "Cursor AI",
+        "Open AI Integration",
+        "Aspose Cloud: Document API"
+      ],
+      "date": "June 2025",
+      "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1748133182/portfolio-media/tziiobeg3dp9zdofli1l.mov",
+      "mediaType": "video",
+      "titleUrl": "https://resumeoptimizer-theta.vercel.app/"
     }
   ]
 }
