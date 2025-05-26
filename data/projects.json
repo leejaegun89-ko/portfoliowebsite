@@ -150,7 +150,7 @@
     {
       "id": "1748293933850",
       "title": "AI Resume Optimizer w. Backend",
-      "description": "\"Building on the previous tool, we integrated a backend structure using Google Firebase to capture user data. The platform now includes user authentication (Sign Up/Sign In), profile editing capabilities, and company tracking features.",
+      "description": "Building on the previous tool, I integrated a backend structure using Google Firebase to capture user data. The platform now includes user authentication (Sign Up/Sign In), profile editing capabilities, and company tracking features.",
       "technologies": [
         "Cursor AI",
         "Firebase Authentication",
