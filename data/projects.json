@@ -86,8 +86,8 @@
     },
     {
       "id": "1747535377489",
-      "title": "Document Upload and Extraction",
-      "description": "Vibe coding product, created in Cursor with HTML, JavaScript, and CSS. This is actually a major feature of our Lawfully Pro product, designed to fully automate the workflow for law firms. I built the MVP to showcase the concept, improve my skills, and facilitate communication with the Engineering team.",
+      "title": "AI Document Upload and Extraction",
+      "description": "Vibe coding product, created in Cursor with HTML, JavaScript, and CSS. This is actually a major feature of our Lawfully product, designed to fully automate the workflow for law firms. I built the MVP to showcase the concept, improve my skills, and facilitate communication with the Engineering team.",
       "technologies": [
         "Cursor AI",
         "HTML",
@@ -96,7 +96,7 @@
         "Github",
         "Vercel"
       ],
-      "date": "April 2025",
+      "date": "April 28 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747535140/portfolio-media/kbj9z6yfrefizpfq79qn.mov",
       "mediaType": "video",
       "titleUrl": "https://documentuploadextract.vercel.app/"
@@ -113,7 +113,7 @@
         "Github",
         "Vercel"
       ],
-      "date": "March 2025",
+      "date": "March 30 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747534961/portfolio-media/yecgiqmaeuz5oueuq2wc.mov",
       "mediaType": "video",
       "titleUrl": "https://lunchmenu-khaki.vercel.app/"
@@ -128,7 +128,7 @@
         "Vercel",
         "Github"
       ],
-      "date": "May 2025",
+      "date": "May 18 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1747621057/portfolio-media/uqucyoygkpje9ah6k0i5.mov",
       "mediaType": "video",
       "titleUrl": "https://imageuploaderandpromptgenerator.vercel.app/"
@@ -142,8 +142,22 @@
         "Open AI Integration",
         "Aspose Cloud: Document API"
       ],
-      "date": "June 2025",
+      "date": "May 23 2025",
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1748133182/portfolio-media/tziiobeg3dp9zdofli1l.mov",
+      "mediaType": "video",
+      "titleUrl": "https://resumeoptimizer-theta.vercel.app/"
+    },
+    {
+      "id": "1748293933850",
+      "title": "AI Resume Optimizer w. Backend",
+      "description": "\"Building on the previous tool, we integrated a backend structure using Google Firebase to capture user data. The platform now includes user authentication (Sign Up/Sign In), profile editing capabilities, and company tracking features.",
+      "technologies": [
+        "Cursor AI",
+        "Firebase Authentication",
+        "Firebase Store Database"
+      ],
+      "date": "May 26 2025",
+      "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1748294234/portfolio-media/kvxgz9kboxrsc2gp4ozp.mov",
       "mediaType": "video",
       "titleUrl": "https://resumeoptimizer-theta.vercel.app/"
     }
