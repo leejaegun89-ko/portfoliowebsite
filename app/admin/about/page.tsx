@@ -6,6 +6,8 @@ import Link from 'next/link';
 export default function AdminAbout() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [content, setContent] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [x, setX] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -25,6 +27,8 @@ export default function AdminAbout() {
       const response = await fetch('/api/about');
       const data = await response.json();
       setContent(data.content);
+      setLinkedin(data.linkedin || '');
+      setX(data.x || '');
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching content:', error);
@@ -40,7 +44,7 @@ export default function AdminAbout() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, linkedin, x }),
       });
 
       if (response.ok) {
@@ -147,6 +151,24 @@ export default function AdminAbout() {
               className="content-editor"
               placeholder="Enter your about content here..."
             />
+            <div className="flex flex-col gap-4">
+              <input
+                type="text"
+                value={linkedin}
+                onChange={e => setLinkedin(e.target.value)}
+                className="content-editor"
+                placeholder="LinkedIn URL"
+                style={{ minHeight: 0 }}
+              />
+              <input
+                type="text"
+                value={x}
+                onChange={e => setX(e.target.value)}
+                className="content-editor"
+                placeholder="X (Twitter) URL"
+                style={{ minHeight: 0 }}
+              />
+            </div>
             <div className="flex justify-center">
               <button
                 onClick={handleSave}

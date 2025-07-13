@@ -33,7 +33,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { content } = await request.json();
+    const { content, linkedin, x } = await request.json();
 
     if (!content || typeof content !== 'string') {
       return new NextResponse(
@@ -49,12 +49,12 @@ export async function POST(request: Request) {
 
     await fs.writeFile(
       dataFilePath,
-      JSON.stringify({ content }, null, 2),
+      JSON.stringify({ content, linkedin: linkedin || '', x: x || '' }, null, 2),
       'utf8'
     );
 
     return new NextResponse(
-      JSON.stringify({ content }),
+      JSON.stringify({ content, linkedin: linkedin || '', x: x || '' }),
       {
         status: 200,
         headers: {
