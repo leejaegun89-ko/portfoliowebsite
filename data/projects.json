@@ -160,6 +160,16 @@
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1748294234/portfolio-media/kvxgz9kboxrsc2gp4ozp.mov",
       "mediaType": "video",
       "titleUrl": "https://resumeoptimizer-theta.vercel.app/"
+    },
+    {
+      "id": "1754253916230",
+      "title": "AI-Powered Document Assistant: Upload and Ask Anything (On-Going)",
+      "description": "The Sales team and others often ask about product details—and even as a PM, I sometimes need Engineering to explain specific features. So I built Dumbo: an AI Wiki Chatbot.\n\nJust upload documents like PRDs, and Dumbo answers any product-related question instantly. It saves time across teams—Sales can respond on the spot, and anyone can find answers fast.\n\nUpload. Ask Anything.\n\nNext, I’m exploring an AI agent that guides users through their full immigration journey via chat. It has the potential to expand our B2B product into a powerful, full-service AI assistant.\n",
+      "technologies": [],
+      "date": "August 3 2025",
+      "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1754254555/portfolio-media/msn9nlw9j2nmtbezv0ug.mov",
+      "mediaType": "video",
+      "titleUrl": ""
     }
   ]
 }
