@@ -170,6 +170,19 @@
       "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1754254555/portfolio-media/msn9nlw9j2nmtbezv0ug.mov",
       "mediaType": "video",
       "titleUrl": ""
+    },
+    {
+      "id": "1771534716222",
+      "title": "BasicSoccer AI - App (In-progress)",
+      "description": "BasicSoccer AI, An AI-powered soccer coach that analyzes your training videos and gives instant performance feedback.\n\n\n1) Upload or record your drill\n2) Get AI feedback + a performance score\n3) Playback AI Overlay",
+      "technologies": [
+        "App Vibe Coding",
+        "Vision AI"
+      ],
+      "date": "February 2026",
+      "mediaUrl": "https://res.cloudinary.com/dx59wxyqb/video/upload/v1771534755/portfolio-media/x2pozkhq3rrxdgifnnjf.mov",
+      "mediaType": "video",
+      "titleUrl": ""
     }
   ]
 }
